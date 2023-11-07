@@ -1,30 +1,20 @@
 import { useNavigation } from '@react-navigation/native';
 import { StatusBar } from 'expo-status-bar';
-import { sendPasswordResetEmail, signInWithEmailAndPassword } from 'firebase/auth';
+import { sendPasswordResetEmail } from 'firebase/auth';
 import React, { useState } from 'react';
 import { Image, KeyboardAvoidingView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { FIREBASE_AUTH } from '../FirebaseConfig';
 
-export default function LoginScreen() {
+export default function ForgetPassword() {
     const navigation = useNavigation();
     const [email,setEmail] = useState('');
     const [password,setPassword] = useState('');
     const auth = FIREBASE_AUTH;
 
-    const signIn = async () =>{
-        try{
-            const response = await signInWithEmailAndPassword(auth,email,password);
-            //console.log(response);
-            navigation.push('Dashboard')
-        } catch(error){
-            console.log(error);
-            alert('Login Failed' + error.message);
-        }
-    }
-
     const changePassword = async () =>{
         const response = await sendPasswordResetEmail(auth,email)
         .then(()=>alert("Check your email to reset password"))
+        navigation.push('Login')
         .catch((error)=>{
             alert(error)
         })
@@ -45,26 +35,10 @@ export default function LoginScreen() {
                 <View style={styles.inputContainer}>
                     <TextInput value={email} style={styles.input} placeholder='Email' placeholderTextColor={'maroon'} onChangeText={(text) => setEmail(text)}/>
                 </View>
-                <View style={styles.inputContainer}>
-                    <TextInput value={password} style={styles.input} placeholder='Password' placeholderTextColor={'maroon'} onChangeText={(text) => setPassword(text)} secureTextEntry/>
-                </View>
                 <View style={styles.buttonContainer}>
-                    <TouchableOpacity style={styles.button} onPress={() => signIn()}>
-                        <Text style={styles.buttonText}>Login</Text>
+                    <TouchableOpacity style={styles.button} onPress={() => changePassword()}>
+                        <Text style={styles.buttonText}>Reset Password</Text>
                     </TouchableOpacity>
-                </View>
-                <View style={styles.linkContainer}>
-                    <Text>Forget Password?</Text>
-                    <TouchableOpacity onPress={() => navigation.push('ForgetPass')}>
-                        <Text style={styles.linkText}> Click Here </Text>
-                    </TouchableOpacity>
-                </View>
-                <View style={styles.linkContainer}>
-                    <Text>Don't have an account?</Text>
-                    <TouchableOpacity onPress={() => navigation.push('Signup')}>
-                        <Text style={styles.linkText}> Signup </Text>
-                    </TouchableOpacity>
-                    <Text>now!</Text>
                 </View>
             </View>
         </KeyboardAvoidingView>
