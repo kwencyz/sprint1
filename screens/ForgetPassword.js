@@ -16,7 +16,7 @@ export default function ForgetPassword() {
         .then(()=>alert("Check your email to reset password"))
         navigation.push('Login')
         .catch((error)=>{
-            alert(error)
+            alert("enter your email")
         })
     }
 

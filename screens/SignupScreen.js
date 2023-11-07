@@ -12,6 +12,7 @@ export default function SignupScreen() {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const userType = ["Passenger", "Driver"];
+    const [regNo, setRegNo] = useState('');
     const auth = FIREBASE_AUTH;
 
     const signUp = async () =>{
@@ -24,6 +25,14 @@ export default function SignupScreen() {
             alert('Login Failed' + error.message);
         }
     }
+
+    const [selectedUserType, setSelectedUserType] = useState('');
+    const [textInputVisible, setTextInputVisible] = useState(false);
+
+    const handleDropdownChange = (selectedItem, index) => {
+      setSelectedUserType(selectedItem);
+      setTextInputVisible(selectedItem === 'Driver');
+    };
     
   return (
     <KeyboardAvoidingView style={styles.container}>
@@ -48,21 +57,23 @@ export default function SignupScreen() {
         </View>
         <View>
         <SelectDropdown
-          data={userType}
-          onSelect={(selectedItem, index) => {
-            console.log(selectedItem, index);
-          }}
-          buttonTextAfterSelection={(selectedItem, index) => {
-            return selectedItem;
-          }}
-          rowTextForSelection={(item, index) => {
-            return item;
-          }}
-          buttonStyle={styles.dropdownButton} // Apply custom styles to the button
-          buttonTextStyle={styles.dropdownButtonText} // Apply custom styles to the button text
-          dropdownStyle={styles.dropdown} // Apply custom styles to the dropdown container
-          dropdownTextStyle={styles.dropdownText} // Apply custom styles to the dropdown items text
-        />
+        data={userType}
+        onSelect={handleDropdownChange}
+        buttonTextAfterSelection={(selectedItem, index) => selectedItem}
+        rowTextForSelection={(item, index) => item}
+        buttonStyle={styles.dropdownButton} // Apply custom styles to the button
+        buttonTextStyle={styles.dropdownButtonText} // Apply custom styles to the button text
+        dropdownStyle={styles.dropdown} // Apply custom styles to the dropdown container
+        dropdownTextStyle={styles.dropdownText} // Apply custom styles to the dropdown items text
+
+      />
+      </View>
+      <View>
+        {textInputVisible && (
+          <View style={styles.inputContainerUser}>
+          <TextInput value={regNo} style={styles.input} placeholder='Registration Number' placeholderTextColor={'maroon'} onChangeText={(text) => setRegNo(text)}/>
+          </View>
+        )}
         </View>
         <View style={styles.buttonContainer}>
           <TouchableOpacity style={styles.button} onPress={() => signUp()}>
@@ -107,7 +118,7 @@ const styles = StyleSheet.create({
     width: '80%',
     backgroundColor: 'white',
     borderRadius: 20,
-    marginBottom: 20,
+    marginBottom: 10,
     padding: 10,
     elevation: 3,
     shadowColor: 'rgba(0,0,0,0.2)',
@@ -115,13 +126,27 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.8,
     shadowRadius: 2,
   },
+  inputContainerUser: {
+    width: '100%',
+    backgroundColor: 'white',
+    borderRadius: 20,
+    padding: 10,
+    paddingLeft: 100,
+    paddingRight: 100,
+    elevation: 3,
+    shadowColor: 'rgba(0,0,0,0.2)',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.8,
+    shadowRadius: 2,
+    marginTop: -100,
+  },
   input: {
     color: 'maroon',
   },
   buttonContainer: {
     width: '80%',
     marginBottom: 20,
-    marginTop: -80,
+    marginTop: -40,
   },
   button: {
     width: '100%',
@@ -148,7 +173,7 @@ const styles = StyleSheet.create({
   },
 dropdownButton: {
     width: '80%',
-    height: '33%',
+    height: '31%',
     backgroundColor: 'white',
     borderRadius: 20,
     padding: 0,
@@ -161,7 +186,7 @@ dropdownButton: {
   },
   dropdownButtonText: {
     color: 'maroon',
-    textAlign: 'center',
+    marginLeft: -170,
     fontSize: 16,
   },
   dropdown: {
@@ -173,7 +198,7 @@ dropdownButton: {
     shadowOffset: { width: 0, height: 2 }, // Set shadow offset
     shadowOpacity: 0.8, // Set shadow opacity
     shadowRadius: 2, // Set shadow radius
-    maxHeight: 200,
+    maxHeight: 100,
   },
   dropdownText: {
     color: 'maroon',
